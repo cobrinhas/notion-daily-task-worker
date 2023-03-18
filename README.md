@@ -1,6 +1,6 @@
-# refresh
+# notion-daily-task-worker
 
-Scheduled Cloudflare worker that summarizes analytics database in a single JSON file.
+Scheduled Cloudflare Worker that prepares our daily task workflow every midnight.
 
 ---
 
