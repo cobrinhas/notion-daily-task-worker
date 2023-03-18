@@ -1,0 +1,6 @@
+name = "notion-daily-task-worker"
+main = "src/index.ts"
+compatibility_date = "2023-03-18"
+
+[triggers]
+crons = [ "1 * * * *" ]
