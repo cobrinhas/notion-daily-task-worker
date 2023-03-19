@@ -8,7 +8,9 @@ This worker was bootstrapped and configured with [wrangler](https://github.com/c
 
 ## Development
 
-Run the local server via `npm run start`
+Run the local server via `wrangler dev --test-scheduled`
+
+Trigger instant cron events via `curl "http://localhost:8787/__scheduled?cron=*+*+*+*+*"`
 
 ## Deploy
 
