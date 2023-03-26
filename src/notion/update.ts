@@ -3,7 +3,12 @@ import { CreatePageResponse } from "@notionhq/client/build/src/api-endpoints";
 import { filterBlockChildren } from "./filter";
 import { RecursiveBlock, UpdateBlockChildrenResponse } from "./schema";
 
+const twoHoursInMS = 2 * 60 * 60 * 1000;
+
 export function shallowPageClone(pageId: string, client: Client): Promise<CreatePageResponse> {
+    const dateNow = new Date();
+    const dateYesterday = new Date(dateNow.getTime() - twoHoursInMS) // Since worker runs at 1 AM, we subtract 2h to get yesterday date
+
     return client.pages.create(
         {
             parent: {
@@ -13,7 +18,7 @@ export function shallowPageClone(pageId: string, client: Client): Promise<Create
                 title: [
                     {
                         text: {
-                            content: new Date().toLocaleDateString(new Intl.Locale("pt")),
+                            content: dateYesterday.toLocaleDateString(new Intl.Locale("pt")),
                         }
                     }
                 ]
