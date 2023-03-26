@@ -1,32 +1,27 @@
 import { Client } from "@notionhq/client";
 import { Notion } from "./config";
+import { filterBlockChildren, RecursiveBlock, recursiveBlockUpdate, shallowPageClone } from "./notion";
 
 export default async function (config: Notion): Promise<void> {
-    const notion = new Client({
+    const client = new Client({
         auth: config.apiToken,
     });
 
     try {
-        const blocks = await notion.blocks.children.list({ block_id: 'bc6d534bf3774d258c957557b115c0ae' });
+        const blocks = filterBlockChildren((await client.blocks.children.list({ block_id: config.parentPageId })).results);
+        const page = await shallowPageClone(config.parentPageId, client);
 
-        for (const block of blocks.results) {
-            console.info(block);
-        }
+        const recursiveBlock = <RecursiveBlock>{
+            id: page.id,
+            children: blocks,
+        };
 
-        notion.pages.create({
-            parent: {
-                page_id: 'bc6d534bf3774d258c957557b115c0ae',
-            },
-            properties: [
-                {
+        const recursiveBlockUpdateResponse = await recursiveBlockUpdate(config.apiToken, client, recursiveBlock);
 
-                }
-            ],
-        });
+        console.info(`recursiveBlockUpdate status: ${recursiveBlockUpdateResponse.status}`);
     } catch (err: any) {
         console.error(err);
     }
-
 
     return Promise.resolve();
 }
